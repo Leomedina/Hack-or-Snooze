@@ -9,7 +9,8 @@ class User {
 		this.name = userObj.name;
 		this.createdAt = userObj.createdAt;
 		this.updatedAt = userObj.updatedAt;
-		//Set to default blanks
+
+		// these are all set to defaults, not passed in by the constructor
 		this.loginToken = '';
 		this.favorites = [];
 		this.ownStories = [];
@@ -86,6 +87,7 @@ class User {
 			},
 		});
 
+		console.log(token);
 		// instantiate the user from the API information
 		const existingUser = new User(response.data.user);
 
@@ -101,10 +103,10 @@ class User {
 	async getUserData() {
 		const response = await axios.get(`${BASE_URL}/users/${this.username}`, {
 			params: {
-				token: existingUser.loginToken,
+				token: this.loginToken,
 			},
 		});
-
+		console.log(this.loginToken);
 		this.name = response.data.user.name;
 		this.createdAt = response.data.user.createdAt;
 		this.updatedAt = response.data.user.updatedAt;
@@ -115,6 +117,7 @@ class User {
 	}
 
 	async addFavorite(storyId) {
+		console.log(this.LoginToken);
 		if (!token || !username) return null;
 
 		const response = await axios.post(`${BASE_URL}/users/${this.username}/favorites/${storyId}`, {
