@@ -35,6 +35,22 @@ class StoryList {
 		return storyList;
 	}
 
+	async removeStory(user, storyId) {
+		await axios({
+			url: `${BASE_URL}/stories/${storyId}`,
+			method: 'DELETE',
+			data: {
+				token: user.loginToken,
+			},
+		});
+
+		// filter out the story whose ID we are removing
+		this.stories = this.stories.filter((story) => story.storyId !== storyId);
+
+		// do the same thing for the user's list of stories
+		user.ownStories = user.ownStories.filter((s) => s.storyId !== storyId);
+	}
+
 	/**
 	 * Method to make a POST request to /stories and add the new story to the list
 	 * - user - the current instance of User who will post the story
@@ -44,25 +60,22 @@ class StoryList {
 	 */
 
 	async addStory(user, newStory) {
-		const response = await axios
-			.post(`${BASE_URL}/stories`, {
-				token: user.login,
+		const response = await axios({
+			method: 'POST',
+			url: `${BASE_URL}/stories`,
+			data: {
+				// request body
+				// this is the format specified by the API
+				token: user.loginToken,
 				story: newStory,
-			})
-			.catch(function (error) {
-				if (error.response) {
-					// Catches request made and server responded
-					console.log(error.response.data);
-					console.log(error.response.status);
-					console.log(error.response.headers);
-				} else {
-					// Catches remaining errors
-					console.log('Error', error.message);
-				}
-			});
+			},
+		});
+
+		// make a Story instance out of the story object we get back
 		newStory = new Story(response.data.story);
-		//set story to the beginning of this instance's stories and the user's own stories array.
+		// add the story to the beginning of the list
 		this.stories.unshift(newStory);
+		// add the story to the beginning of the user's list
 		user.ownStories.unshift(newStory);
 
 		return newStory;
@@ -74,7 +87,6 @@ class StoryList {
  * - storyObj: an object that has story properties in it
  */
 class Story {
-
 	constructor(storyObj) {
 		this.author = storyObj.author;
 		this.title = storyObj.title;

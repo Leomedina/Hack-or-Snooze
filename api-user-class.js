@@ -87,7 +87,6 @@ class User {
 			},
 		});
 
-		console.log(token);
 		// instantiate the user from the API information
 		const existingUser = new User(response.data.user);
 
@@ -106,7 +105,6 @@ class User {
 				token: this.loginToken,
 			},
 		});
-		console.log(this.loginToken);
 		this.name = response.data.user.name;
 		this.createdAt = response.data.user.createdAt;
 		this.updatedAt = response.data.user.updatedAt;
@@ -117,22 +115,16 @@ class User {
 	}
 
 	async addFavorite(storyId) {
-		console.log(this.LoginToken);
-		if (!token || !username) return null;
-
 		const response = await axios.post(`${BASE_URL}/users/${this.username}/favorites/${storyId}`, {
-			params: {
-				token: this.loginToken,
-			},
+			token: this.loginToken,
 		});
+
 		//Reload User Data
 		await this.getUserData();
 		return this;
 	}
 
 	async removeFavorite(storyId) {
-		if (!token || !username) return null;
-
 		const response = await axios.delete(`${BASE_URL}/users/${this.username}/favorites/${storyId}`, {
 			params: {
 				token: this.loginToken,

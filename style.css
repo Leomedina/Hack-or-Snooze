@@ -36,7 +36,6 @@ a:hover {
 }
 
 
-
 nav {
   display: flex;
   background-color: #ff6600;
@@ -46,6 +45,8 @@ nav {
 }
 
 .main-nav-links {
+  display: inline;
+  font-weight: 400;
   margin: 0 15px;
 }
 
