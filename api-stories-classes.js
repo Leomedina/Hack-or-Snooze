@@ -49,6 +49,8 @@ class StoryList {
 
 		// do the same thing for the user's list of stories
 		user.ownStories = user.ownStories.filter((s) => s.storyId !== storyId);
+
+		await this.getUserData();
 	}
 
 	/**
